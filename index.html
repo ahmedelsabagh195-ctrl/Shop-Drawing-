@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop Drawings Viewer — Demo | Ahmed Mostafa Sabry</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bp-navy: #0b1524;
+    --bp-navy-deep: #071019;
+    --bp-blue: #1d3f66;
+    --bp-blue-line: rgba(94, 156, 211, 0.16);
+    --bp-cyan: #6fc7e6;
+    --bp-cyan-bright: #9fe0f5;
+    --bp-amber: #e0a94a;
+    --bp-green: #6fcf97;
+    --bp-red: #d97a6f;
+    --bp-paper: #eef3f7;
+    --bp-muted: #7e97ad;
+    --bp-panel: #0f1e30;
+    --bp-panel-border: #1c3350;
+    --font-body: 'IBM Plex Sans Arabic', 'IBM Plex Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bp-navy-deep);
+    color: var(--bp-paper);
+    font-family: var(--font-body);
+    min-height: 100vh;
+  }
+
+  body {
+    background-image:
+      linear-gradient(var(--bp-blue-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--bp-blue-line) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-position: -1px -1px;
+  }
+
+  .demo-banner {
+    background: linear-gradient(90deg, #7a4a1e, #8a5a24);
+    color: #fff2de;
+    text-align: center;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+  }
+
+  header {
+    padding: 36px 24px 28px;
+    max-width: 1180px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: var(--bp-cyan);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .eyebrow::before {
+    content: "";
+    width: 22px;
+    height: 1px;
+    background: var(--bp-cyan);
+  }
+
+  h1 {
+    font-size: 32px;
+    margin: 0 0 8px;
+    font-weight: 700;
+    color: var(--bp-paper);
+  }
+
+  h1 .accent { color: var(--bp-cyan-bright); }
+
+  .subtitle {
+    color: var(--bp-muted);
+    font-size: 15px;
+    max-width: 640px;
+    line-height: 1.7;
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 14px;
+    margin-top: 22px;
+    flex-wrap: wrap;
+  }
+
+  .stat-chip {
+    background: var(--bp-panel);
+    border: 1px solid var(--bp-panel-border);
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--bp-cyan);
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .stat-chip b {
+    font-size: 18px;
+    color: var(--bp-paper);
+  }
+
+  main {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 24px 60px;
+  }
+
+  .panel {
+    background: var(--bp-panel);
+    border: 1px solid var(--bp-panel-border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .filters {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr auto;
+    gap: 12px;
+    align-items: end;
+  }
+
+  @media (max-width: 800px) {
+    .filters { grid-template-columns: 1fr 1fr; }
+  }
+
+  .field label {
+    display: block;
+    font-size: 12px;
+    color: var(--bp-muted);
+    margin-bottom: 6px;
+    font-family: var(--font-mono);
+    letter-spacing: 0.5px;
+  }
+
+  .field input, .field select {
+    width: 100%;
+    background: var(--bp-navy);
+    border: 1px solid var(--bp-panel-border);
+    color: var(--bp-paper);
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    outline: none;
+    transition: border-color .15s ease;
+  }
+
+  .field input:focus, .field select:focus {
+    border-color: var(--bp-cyan);
+  }
+
+  .field input::placeholder { color: #4a627a; }
+
+  .reset-btn {
+    background: transparent;
+    border: 1px solid var(--bp-panel-border);
+    color: var(--bp-muted);
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 13px;
+    height: 41px;
+    transition: all .15s ease;
+    white-space: nowrap;
+  }
+
+  .reset-btn:hover {
+    border-color: var(--bp-cyan);
+    color: var(--bp-cyan);
+  }
+
+  .results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    padding: 0 4px;
+  }
+
+  .results-count {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--bp-muted);
+  }
+
+  .results-count b { color: var(--bp-cyan-bright); }
+
+  .table-wrap {
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid var(--bp-panel-border);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bp-panel);
+    min-width: 820px;
+  }
+
+  thead th {
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--bp-cyan);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--bp-panel-border);
+    background: var(--bp-navy);
+    position: sticky;
+    top: 0;
+  }
+
+  tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(28, 51, 80, 0.6);
+    font-size: 13.5px;
+    vertical-align: middle;
+  }
+
+  tbody tr:hover { background: rgba(111, 199, 230, 0.05); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  .dwg-no {
+    font-family: var(--font-mono);
+    color: var(--bp-cyan-bright);
+    direction: ltr;
+    unicode-bidi: bidi-override;
+    display: inline-block;
+  }
+
+  .title-cell { color: var(--bp-paper); }
+  .muted-cell { color: var(--bp-muted); }
+
+  .stamp {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 3px;
+    border: 1.5px solid;
+    transform: rotate(-2deg);
+    font-weight: 600;
+  }
+
+  .stamp.approved { color: var(--bp-green); border-color: var(--bp-green); background: rgba(111,207,151,0.08); }
+  .stamp.closed { color: var(--bp-cyan); border-color: var(--bp-cyan); background: rgba(111,199,230,0.08); }
+  .stamp.noted { color: var(--bp-amber); border-color: var(--bp-amber); background: rgba(224,169,74,0.08); }
+  .stamp.pending { color: var(--bp-muted); border-color: var(--bp-muted); background: rgba(126,151,173,0.08); transform: none; }
+
+  .view-btn {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--bp-navy-deep);
+    background: var(--bp-cyan);
+    border: none;
+    padding: 7px 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    white-space: nowrap;
+    opacity: 0.9;
+  }
+
+  .view-btn:hover { opacity: 1; }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--bp-muted);
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 18px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+
+  .pagination button {
+    background: var(--bp-panel);
+    border: 1px solid var(--bp-panel-border);
+    color: var(--bp-cyan);
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .pagination button:disabled {
+    color: var(--bp-muted);
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  footer {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 24px 24px 40px;
+    border-top: 1px solid var(--bp-panel-border);
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .footer-credit {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--bp-muted);
+  }
+
+  .footer-credit b { color: var(--bp-cyan-bright); }
+
+  .footer-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--bp-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* Modal for demo "view" click */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(4,9,15,0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    padding: 20px;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--bp-panel);
+    border: 1px solid var(--bp-cyan);
+    border-radius: 10px;
+    padding: 26px;
+    max-width: 420px;
+    text-align: center;
+  }
+
+  .modal h3 {
+    margin: 0 0 10px;
+    color: var(--bp-cyan-bright);
+    font-size: 17px;
+  }
+
+  .modal p {
+    color: var(--bp-muted);
+    font-size: 13.5px;
+    line-height: 1.7;
+    margin: 0 0 18px;
+  }
+
+  .modal button {
+    background: var(--bp-cyan);
+    color: var(--bp-navy-deep);
+    border: none;
+    padding: 9px 22px;
+    border-radius: 6px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<div class="demo-banner">
+  هذا عرض توضيحي (Demo) — كل البيانات المعروضة وهمية وتم توليدها عشوائياً لأغراض العرض فقط
+</div>
+
+<header>
+  <div class="eyebrow">Document Control · Portfolio Demo</div>
+  <h1>Shop Drawings <span class="accent">Viewer</span></h1>
+  <p class="subtitle">
+    أداة بحث سريعة عن الرسومات المعتمدة (Shop Drawings) حسب المبنى والتخصص — مبنية لتسريع وصول فريق الموقع للرسومات المعتمدة بدل البحث اليدوي في ملفات الإكسل.
+  </p>
+  <div class="stats-row">
+    <div class="stat-chip">إجمالي الرسومات <b id="statTotal">-</b></div>
+    <div class="stat-chip">معتمدة / مقفولة <b id="statApproved">-</b></div>
+    <div class="stat-chip">عدد المباني <b id="statBuildings">-</b></div>
+  </div>
+</header>
+
+<main>
+  <div class="panel">
+    <div class="filters">
+      <div class="field">
+        <label>بحث برقم الرسمة أو العنوان</label>
+        <input type="text" id="searchInput" placeholder="مثال: AhmedMostafa-CIV-0001">
+      </div>
+      <div class="field">
+        <label>المبنى</label>
+        <select id="buildingFilter"><option value="">كل المباني</option></select>
+      </div>
+      <div class="field">
+        <label>التخصص</label>
+        <select id="tradeFilter"><option value="">كل التخصصات</option></select>
+      </div>
+      <button class="reset-btn" id="resetBtn">إعادة تعيين</button>
+    </div>
+  </div>
+
+  <div class="results-header">
+    <div class="results-count">عدد النتائج: <b id="resultsCount">0</b></div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>رقم الرسمة</th>
+          <th>العنوان</th>
+          <th>التخصص</th>
+          <th>المبنى</th>
+          <th>الحالة</th>
+          <th>تاريخ التقديم</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="resultsBody"></tbody>
+    </table>
+  </div>
+
+  <div class="empty-state" id="emptyState" style="display:none;">لا توجد نتائج مطابقة لبحثك</div>
+
+  <div class="pagination" id="pagination"></div>
+</main>
+
+<footer>
+  <div class="footer-credit">تطوير وتصميم: <b>Ahmed Mostafa Sabry</b></div>
+  <div class="footer-tag">Document Control Tools · Portfolio Demo</div>
+</footer>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h3>وضع العرض التوضيحي</h3>
+    <p>في النسخة الحقيقية، الزرار ده بيفتح ملف الـ PDF الخاص بالرسمة مباشرة من مكانه على السيرفر. الروابط الفعلية معطّلة في نسخة الديمو دي.</p>
+    <button onclick="document.getElementById('modalOverlay').classList.remove('open')">تمام</button>
+  </div>
+</div>
+
+<script src="demo_data.js"></script>
+<script>
+  const PAGE_SIZE = 25;
+  let currentPage = 1;
+  let filtered = DRAWINGS_DATA.slice();
+
+  function statusClass(status) {
+    if (status === 'Approved' || status === 'Approved as Noted') {
+      return status === 'Approved as Noted' ? 'noted' : 'approved';
+    }
+    if (status === 'Closed') return 'closed';
+    return 'pending';
+  }
+
+  function statusLabel(status) {
+    const map = {
+      'Approved': 'معتمدة',
+      'Closed': 'مقفولة',
+      'Approved as Noted': 'معتمدة بملاحظات',
+      'Under Review': 'قيد المراجعة',
+      'Pending Submission': 'لم تُقدَّم بعد',
+      'Submitted': 'مقدَّمة'
+    };
+    return map[status] || status;
+  }
+
+  function populateFilters() {
+    const buildings = [...new Set(DRAWINGS_DATA.map(r => r.Building))].sort();
+    const trades = [...new Set(DRAWINGS_DATA.map(r => r.Trade))].sort();
+    const bSel = document.getElementById('buildingFilter');
+    const tSel = document.getElementById('tradeFilter');
+    buildings.forEach(b => {
+      const opt = document.createElement('option');
+      opt.value = b; opt.textContent = b;
+      bSel.appendChild(opt);
+    });
+    trades.forEach(t => {
+      const opt = document.createElement('option');
+      opt.value = t; opt.textContent = t;
+      tSel.appendChild(opt);
+    });
+  }
+
+  function updateStats() {
+    document.getElementById('statTotal').textContent = DRAWINGS_DATA.length.toLocaleString();
+    const approvedCount = DRAWINGS_DATA.filter(r => ['Approved','Closed','Approved as Noted'].includes(r.Status)).length;
+    document.getElementById('statApproved').textContent = approvedCount.toLocaleString();
+    document.getElementById('statBuildings').textContent = new Set(DRAWINGS_DATA.map(r => r.Building)).size;
+  }
+
+  function applyFilters() {
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+    const building = document.getElementById('buildingFilter').value;
+    const trade = document.getElementById('tradeFilter').value;
+
+    filtered = DRAWINGS_DATA.filter(r => {
+      if (building && r.Building !== building) return false;
+      if (trade && r.Trade !== trade) return false;
+      if (q && !(r['Drawing Number'].toLowerCase().includes(q) || r.Title.toLowerCase().includes(q))) return false;
+      return true;
+    });
+
+    currentPage = 1;
+    render();
+  }
+
+  function render() {
+    const tbody = document.getElementById('resultsBody');
+    const emptyState = document.getElementById('emptyState');
+    tbody.innerHTML = '';
+
+    document.getElementById('resultsCount').textContent = filtered.length.toLocaleString();
+
+    if (filtered.length === 0) {
+      emptyState.style.display = 'block';
+      document.getElementById('pagination').innerHTML = '';
+      return;
+    }
+    emptyState.style.display = 'none';
+
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const pageItems = filtered.slice(start, start + PAGE_SIZE);
+
+    pageItems.forEach(r => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><span class="dwg-no">${r['Drawing Number']}</span></td>
+        <td class="title-cell">${r.Title}</td>
+        <td class="muted-cell">${r.Trade}</td>
+        <td class="muted-cell">${r.Building}</td>
+        <td><span class="stamp ${statusClass(r.Status)}">${statusLabel(r.Status)}</span></td>
+        <td class="muted-cell" style="font-family: var(--font-mono); direction: ltr; text-align: right;">${r['Submission Date']}</td>
+        <td><button class="view-btn" onclick="document.getElementById('modalOverlay').classList.add('open')">عرض PDF</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    renderPagination();
+  }
+
+  function renderPagination() {
+    const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+    const el = document.getElementById('pagination');
+    el.innerHTML = `
+      <button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(-1)">السابق</button>
+      <span>صفحة ${currentPage} من ${totalPages}</span>
+      <button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(1)">التالي</button>
+    `;
+  }
+
+  function changePage(delta) {
+    currentPage += delta;
+    render();
+  }
+
+  document.getElementById('searchInput').addEventListener('input', applyFilters);
+  document.getElementById('buildingFilter').addEventListener('change', applyFilters);
+  document.getElementById('tradeFilter').addEventListener('change', applyFilters);
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('buildingFilter').value = '';
+    document.getElementById('tradeFilter').value = '';
+    applyFilters();
+  });
+
+  populateFilters();
+  updateStats();
+  render();
+</script>
+
+</body>
+</html>
